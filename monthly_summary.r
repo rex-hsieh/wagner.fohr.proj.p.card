@@ -1,3 +1,4 @@
+library(tictoc)
 tic("Everything")
 
 rm(list=ls())

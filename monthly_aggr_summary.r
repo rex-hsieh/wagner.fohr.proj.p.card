@@ -45,6 +45,7 @@ final_comparison_data <- data.frame(fy18.monthly.transactions = data_dates_fy18$
                                     fy17.monthly.transactions = data_dates_fy17$monthly.transaction.amount)
 months_names <- c("Sept","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Juls","Aug")
 rownames(final_comparison_data) <- months_names
+colnames(final_comparison_data) <- c("FY18","FY17")
 
 # Producing graph ----
 png("months_aggr/monthly_aggr_spending_comparison.png", width = 800, height = 600, units = 'px', res=110)
@@ -81,6 +82,8 @@ yoy_comparisons_plot <- barplot(final_aggr_data$monthly.transaction.amount,
 rm(op)
 dev.off()
 
-
+# Final output tables in .csv ----
+write.csv(final_comparison_data, file = "months_aggr/month_comp_yoy.csv")
+write.csv(final_aggr_data, file = "months_aggr/aggr_month_tm_series.csv")
 
 toc()
