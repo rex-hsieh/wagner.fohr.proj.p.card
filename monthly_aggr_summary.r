@@ -61,7 +61,6 @@ yoy_comparisons_plot <- barplot(t(final_comparison_data),
 rm(op)
 dev.off()
 
-
 # Combining data.frames above in one column, named continuously -----
 
 (final_aggr_data <- c(data_dates_fy17$monthly.transaction.amount, data_dates_fy18$monthly.transaction.amount) )
