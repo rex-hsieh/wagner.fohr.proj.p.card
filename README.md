@@ -24,4 +24,6 @@ Now, here are descriptions of each script:
 
 Download the branch as a zip, unzip it in a directory you prefer to work in, and start producing graphs from there!
 
+Finally, **most importantly**, one can run all four scripts by running the "automate.r" script in the folder. It concatenates every workflow and makes it effortless to obtain results.
+
 **In the near future, I will add more details to this documentation, along with annotations in the .r scripts, so to make it more user friendly.**
