@@ -18,3 +18,5 @@ Now, here are descriptions of each script:
 2. "ytd_summary.r": outputs graph and .csv table for year-to-date summary (up to designated month). Files are saved to "/ytd_comp".
 3. "yoy_summary.r": outputs graph and .csv table for year-on-year summary (up to designated month). Files are saved to "/yoy_comp".
 4. "monthly_aggr_summary.r": outputs graphs for monthly transactions since previous fiscal year (up to designated month). Files are saved to "/months_aggr".
+
+[I'm an inline-style link](https://www.google.com)
