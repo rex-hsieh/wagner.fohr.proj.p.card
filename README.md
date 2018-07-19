@@ -22,3 +22,6 @@ Now, here are descriptions of each script:
 3. "yoy_summary.r": outputs graph and .csv table for year-on-year summary (up to designated month). Files are saved to "/yoy_comp".
 4. "monthly_aggr_summary.r": outputs graphs for monthly transactions since previous fiscal year (up to designated month). Files are saved to "/months_aggr".
 
+Download the branch as a zip, unzip it in a directory you prefer to work in, and start producing graphs from there!
+
+**In the near future, I will add more details to this documentation, along with annotations in the .r scripts, so to make it more user friendly.**
