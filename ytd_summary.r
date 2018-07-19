@@ -21,7 +21,7 @@ sum_ytd_18 <- c()
 for (x in lnames){
   new_data <- subset(data_ytd_18, data_ytd_18$ACC.LAST.NAME == x)
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  sum_ytd_18[x] <- new_sum
+  sum_ytd_18[x] <- as.numeric(new_sum)
 }
 (sum_ytd_18 <- as.data.frame(sum_ytd_18))
 
@@ -33,7 +33,7 @@ sum_ytd_17 <- c()
 for (x in lnames){
   new_data <- subset(data_ytd_17, data_ytd_17$ACC.LAST.NAME == x)
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  sum_ytd_17[x] <- new_sum
+  sum_ytd_17[x] <- as.numeric(new_sum)
 }
 (sum_ytd_17 <- as.data.frame(sum_ytd_17))
 

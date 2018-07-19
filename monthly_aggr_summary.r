@@ -50,8 +50,8 @@ colnames(final_comparison_data) <- c("FY18","FY17")
 # Producing graph ----
 png("months_aggr/monthly_aggr_spending_comparison.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(4,4,4,2)) 
-ylim <- c(0, 1.2*max( max(final_comparison_data$fy18.monthly.transactions),
-                      max(final_comparison_data$fy17.monthly.transactions) ))
+ylim <- c(0, 1.2*max( max(final_comparison_data$FY18),
+                      max(final_comparison_data$FY17) ))
 yoy_comparisons_plot <- barplot(t(final_comparison_data),
                                 names.arg = row.names(final_comparison_data),
                                 horiz = FALSE,las=2, ylim = ylim,
