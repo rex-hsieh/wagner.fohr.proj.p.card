@@ -13,7 +13,7 @@ setwd("C:/Users/mhh357/Desktop/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
-data <- read.csv("p_card_historical.csv")
+data <- read.csv("cta_historical.csv")
 data$FIN.TRANSACTION.AMOUNT <- parse_number(data$FIN.TRANSACTION.AMOUNT)
 data$ACC.LAST.NAME <- as.character(data$ACC.LAST.NAME)
 data$FIN.POSTING.DATE <- as.Date(data$FIN.POSTING.DATE, format = "%m/%d/%Y")
@@ -52,14 +52,14 @@ rownames(final_comparison_data) <- months_names
 colnames(final_comparison_data) <- c("FY18","FY17")
 
 # Producing graph ----
-png("months_aggr/monthly_aggr_spending_comparison.png", width = 800, height = 600, units = 'px', res=110)
+png("months_aggr/monthly_cta_aggr_spending_comparison.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(4,4,4,2)) 
 ylim <- c(0, 1.2*max( max(final_comparison_data$FY18),
                       max(final_comparison_data$FY17) ))
 yoy_comparisons_plot <- barplot(t(final_comparison_data),
                                 names.arg = row.names(final_comparison_data),
                                 horiz = FALSE,las=2, ylim = ylim,
-                                main = "Monthly Comparison of Aggregated Spending on P-Card",
+                                main = "Monthly Comparison of Aggregated Spending on CTA",
                                 col=c("light blue","yellow"), beside = TRUE,
                                 legend = c("FY18","FY17") )
 rm(op)
@@ -73,20 +73,20 @@ dev.off()
 (rownames(final_aggr_data) <- date_year )
 (colnames(final_aggr_data) <- "monthly.transaction.amount")
 
-png("months_aggr/monthly_aggr_spending.png", width = 800, height = 600, units = 'px', res=110)
+png("months_aggr/monthly_cta_aggr_spending.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(7,4,4,2)) 
 ylim <- c(0, 1.2*max(final_aggr_data$monthly.transaction.amount))
 yoy_comparisons_plot <- barplot(final_aggr_data$monthly.transaction.amount,
                                 names.arg = row.names(final_aggr_data),
                                 horiz = FALSE,las=2, ylim = ylim,
-                                main = "Aggregated Spending on P-Card Per Month",
+                                main = "Aggregated Spending on CTA Per Month",
                                 col=c("light blue"), beside = TRUE )
 #                                legend = c("Total") 
 rm(op)
 dev.off()
 
 # Final output tables in .csv ----
-write.csv(final_comparison_data, file = "months_aggr/month_comp_yoy.csv")
-write.csv(final_aggr_data, file = "months_aggr/aggr_month_tm_series.csv")
+write.csv(final_comparison_data, file = "months_aggr/month_cta_comp_yoy.csv")
+write.csv(final_aggr_data, file = "months_aggr/aggr_month_cta_tm_series.csv")
 
 toc()

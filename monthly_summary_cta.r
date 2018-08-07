@@ -9,8 +9,8 @@ tic("Everything")
 rm(list=ls())
 setwd("C:/Users/mhh357/Desktop/P card reporting project")
 
-library(readr,lubridate)
-data <- read.csv("p_card_data.csv")
+library(readr)
+data <- read.csv("cta_card_data.csv")
 data$FIN.TRANSACTION.AMOUNT <- parse_number(data$FIN.TRANSACTION.AMOUNT)
 data$ACC.LAST.NAME <- as.character(data$ACC.LAST.NAME)
 (tot_sum <- sum(data$FIN.TRANSACTION.AMOUNT, na.rm = TRUE))
@@ -28,17 +28,17 @@ for (x in lnames){
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
   final_sum[x] <- new_sum
 }
-(final_sum)
 
 (net_sum <- data.frame(sort(final_sum, decreasing = TRUE) ) )
 (colnames(net_sum) <- c("Total"))
 (net_sum$"% of Total" <- paste(round( (net_sum$Total / tot_sum) * 100, digits = 2), "%", sep ="") )
 
-png("acct_dept_expenses/last_names_net_sum_plot.png", width = 800, height = 600, units = 'px', res=110)
+png("acct_dept_expenses/last_names_cta_net_sum_plot.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(6,4,3,2)) 
-ylim <- c(0, 1.3*max(net_sum$Total))
+ylim <- c(0, 1.2*max(net_sum$Total))
+op <- par(mar=c(9,4,4,2)) 
 net_sum_last_name_plot <- barplot(net_sum$Total,names.arg = row.names(net_sum),
-                             horiz = FALSE,las=2,main = "P-Card Spending by Cardholder",
+                             horiz = FALSE,las=2,main = "CTA Spending by Cardholder",
                              ylim=ylim, col="light blue")
 rm(op)
 text(x = net_sum_last_name_plot, y = net_sum$Total,
@@ -60,11 +60,11 @@ for (x in acct_codes){
 (net_sum_acct_codes <- data.frame(sort(final_sum_acct_codes, decreasing = TRUE) ) )
 (colnames(net_sum_acct_codes) <- c("Total"))
 
-png("acct_dept_expenses/acct_codes_net_sum_plot.png", width = 800, height = 600, units = 'px', res=110)
+png("acct_dept_expenses/acct_codes_cta_net_sum_plot.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(6,4,3,2)) 
-ylim <- c(0, 1.3*max(net_sum_acct_codes$Total))
+ylim <- c(0, 1.2*max(net_sum_acct_codes$Total))
 net_sum_acct_plot <- barplot(net_sum_acct_codes$Total,names.arg = row.names(net_sum_acct_codes), 
-        horiz = FALSE,las=2,main = "P-Card Spending by Account Codes",
+        horiz = FALSE,las=2,main = "CTA Spending by Account Codes",
         ylim = ylim, col="light blue") # Data labels, $ amounts
 rm(op)
 text(x = net_sum_acct_plot, y = net_sum_acct_codes$Total,
@@ -73,7 +73,7 @@ text(x = net_sum_acct_plot, y = net_sum_acct_codes$Total,
 dev.off()
 
 # Now, by counts of unique account codes----
-(net_counts_acct_codes <- table(data$FIN.ACCOUNTING.CODE.04.VALUE))
+(net_counts_acct_codes <- table(data$FIN.ACCOUNTING.CODE.02.VALUE))
 (net_counts_acct_codes <- as.data.frame(net_counts_acct_codes))
 (row.names(net_counts_acct_codes) <- net_counts_acct_codes$Var1)
 (net_counts_acct_codes <- subset(net_counts_acct_codes, select = Freq))
@@ -86,11 +86,11 @@ for(x in row.names(net_counts_acct_codes)){
 
 (colnames(final_counts_acct_codes) <- c("Frequency") )
 
-png("acct_dept_expenses/acct_codes_counts_plot.png", width = 800, height = 600, units = 'px', res=110)
+png("acct_dept_expenses/acct_codes_cta_counts_plot.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(6,4,4,2)) 
-ylim <- c(0, 1.3*max(final_counts_acct_codes$Frequency))
-acct_codes_counts_plot <- barplot(final_counts_acct_codes$Frequency, names.arg = row.names(final_counts_acct_codes),
-        horiz = FALSE,las=2,main = "P-Card Counts by Account Codes",
+ylim <- c(0, 1.2*max(final_counts_acct_codes$Frequency))
+acct_codes_counts_plot <- barplot(final_counts_acct_codes$Frequency, names.arg = row.names(net_counts_acct_codes),
+        horiz = FALSE,las=2,main = "CTA Counts by Account Codes",
         ylim = ylim, col="light blue")
 rm(op)
 text(x = acct_codes_counts_plot, y = final_counts_acct_codes$Frequency,
@@ -106,7 +106,7 @@ for(x in acct_codes){
   acct_codes_table[x,] <- c(final_count,final_sum)
 }
 (acct_codes_table <- as.data.frame(acct_codes_table) )
-write.csv(acct_codes_table, file = "acct_dept_expenses/acct_codes_count_sum_table.csv")
+write.csv(acct_codes_table, file = "acct_dept_expenses/acct_codes_cta_count_sum_table.csv")
 
 # By department codes----
 (net_counts_dept_codes <- table(data$FIN.ACCOUNTING.CODE.04.VALUE))
@@ -120,13 +120,13 @@ for(x in row.names(net_counts_dept_codes)){
 }
 (final_counts_dept_codes <- data.frame(sort(final_counts_dept_codes, decreasing = TRUE)) )
 (colnames(final_counts_dept_codes) <- c("Frequency") )
-write.csv(final_counts_dept_codes, file = "acct_dept_expenses/dept_codes_count_table.csv")
+write.csv(final_counts_dept_codes, file = "acct_dept_expenses/dept_codes_cta_count_table.csv")
 
-png("acct_dept_expenses/dept_codes_counts_plot.png", width = 800, height = 600, units = 'px', res=110)
+png("acct_dept_expenses/dept_codes_cta_counts_plot.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(6,4,4,2)) 
-ylim <- c(0, 1.3*max(final_counts_dept_codes$Frequency))
+ylim <- c(0, 1.2*max(final_counts_dept_codes$Frequency))
 dept_codes_plot <- barplot(final_counts_dept_codes$Frequency, names.arg = row.names(final_counts_dept_codes),
-        horiz = FALSE,las=2, ylim = ylim, main = "P-Card Counts by Department",
+        horiz = FALSE,las=2, ylim = ylim, main = "CTA Counts by Department",
         col="light blue")
 rm(op)
 text(x = dept_codes_plot, y = final_counts_dept_codes$Frequency,

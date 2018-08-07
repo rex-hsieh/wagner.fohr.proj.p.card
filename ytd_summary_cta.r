@@ -9,7 +9,7 @@ setwd("C:/Users/mhh357/Desktop/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
-data <- read.csv("p_card_historical.csv")
+data <- read.csv("cta_historical.csv")
 data$FIN.TRANSACTION.AMOUNT <- parse_number(data$FIN.TRANSACTION.AMOUNT)
 data$ACC.LAST.NAME <- as.character(data$ACC.LAST.NAME)
 data$FIN.POSTING.DATE <- as.Date(data$FIN.POSTING.DATE, format = "%m/%d/%Y")
@@ -60,17 +60,17 @@ for (x in unique_together_names){
   together[x,] <- c(lnames_sum_18,lnames_sum_17)
 }
 
-png("ytd_comp/YTD_Comparisons.png", width = 800, height = 600, units = 'px', res=100)
+png("ytd_comp/YTD_cta_Comparisons.png", width = 800, height = 600, units = 'px', res=100)
 op <- par(mar=c(9,4,4,2)) 
 ylim <- c(0, 1.3*max( max(together$FY18),max(together$FY17) ))
 yoy_comparisons_plot <- barplot(t(together),names.arg = row.names(together),
-                                horiz = FALSE,las=2, ylim = ylim, main = "YTD Comparisons for P-Cards (Up to July), FY17 vs FY18",
+                                horiz = FALSE,las=2, ylim = ylim, main = "YTD Comparisons for cTA (Up to July), FY17 vs FY18",
                                 col=c("light blue","yellow"), beside = TRUE, legend = colnames(together))
 rm(op)
 #text(x = yoy_comparisons_plot, y = rbind((together$FY18), (together$FY17)), 
 #     srt = 25, label = rbind(t(together$FY18), t(together$FY17)), pos = 3, cex = 0.8, col = "blue")
 dev.off()
 
-write.csv(together, file = "ytd_comp/ytd_comparisons_table.csv")
+write.csv(together, file = "ytd_comp/ytd_cta_comparisons_table.csv")
 
 toc()
