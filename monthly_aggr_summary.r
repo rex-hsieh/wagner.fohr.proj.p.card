@@ -1,4 +1,4 @@
-list.of.packages <- c("readr", "tictoc", "lubridate")
+list.of.packages <- c("readr", "tictoc", "lubridate","ggplot2")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -9,7 +9,7 @@ library(lubridate)
 tic("everything")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
@@ -23,6 +23,15 @@ dates_fy17 <- as.Date(c("2016/09/01","2016/10/01","2016/11/01","2016/12/01",
                 "2017/01/01","2017/02/01","2017/03/01","2017/04/01",
                 "2017/05/01","2017/06/01","2017/07/01","2017/08/01",
                 "2017/09/01"))
+dates_fy18 <- as.Date(c("2017/09/01","2017/10/01","2017/11/01","2017/12/01",
+                        "2018/01/01","2018/02/01","2018/03/01","2018/04/01",
+                        "2018/05/01","2018/06/01","2018/07/01","2018/08/01",
+                        "2018/09/01"))
+dates_fy19 <- as.Date(c("2018/09/01","2018/10/01","2018/11/01","2018/12/01",
+                        "2019/01/01","2019/02/01","2019/03/01","2019/04/01",
+                        "2019/05/01","2019/06/01","2019/07/01","2019/08/01",
+                        "2019/09/01"))
+
 data_dates_fy17 <- data.frame(monthly.transaction.amount = numeric())
 for (i in 1:12) {
   new_data <- subset(data, data$FIN.POSTING.DATE >= dates_fy17[i] &
@@ -31,10 +40,6 @@ for (i in 1:12) {
   data_dates_fy17[i,] <- as.numeric(new_sum)
 }
 
-dates_fy18 <- as.Date(c("2017/09/01","2017/10/01","2017/11/01","2017/12/01",
-                        "2018/01/01","2018/02/01","2018/03/01","2018/04/01",
-                        "2018/05/01","2018/06/01","2018/07/01","2018/08/01",
-                        "2018/09/01"))
 data_dates_fy18 <- data.frame(monthly.transaction.amount = numeric())
 for (i in 1:12) {
   new_data <- subset(data, data$FIN.POSTING.DATE >= dates_fy18[i] &
@@ -43,7 +48,7 @@ for (i in 1:12) {
   data_dates_fy18[i,] <- as.numeric(new_sum)
 }
 
-# Combining data.frames above in two columns ----
+# Combining data.frames above in two columns; build the comparison data table ----
 
 final_comparison_data <- data.frame(fy18.monthly.transactions = data_dates_fy18$monthly.transaction.amount,
                                     fy17.monthly.transactions = data_dates_fy17$monthly.transaction.amount)
@@ -60,8 +65,12 @@ yoy_comparisons_plot <- barplot(t(final_comparison_data),
                                 names.arg = row.names(final_comparison_data),
                                 horiz = FALSE,las=2, ylim = ylim,
                                 main = "Monthly Comparison of Aggregated Spending on P-Card",
-                                col=c("light blue","yellow"), beside = TRUE,
-                                legend = c("FY18","FY17") )
+                                col=c("light blue","yellow"), beside = TRUE )
+legend("topright", 
+       legend = c("FY18","FY17"),
+       ncol = 2,
+       fill=c("light blue","yellow"), 
+       cex = 0.75)
 rm(op)
 dev.off()
 
@@ -76,14 +85,21 @@ dev.off()
 png("months_aggr/monthly_aggr_spending.png", width = 800, height = 600, units = 'px', res=110)
 op <- par(mar=c(7,4,4,2)) 
 ylim <- c(0, 1.2*max(final_aggr_data$monthly.transaction.amount))
-yoy_comparisons_plot <- barplot(final_aggr_data$monthly.transaction.amount,
+yoy_plot <- barplot(final_aggr_data$monthly.transaction.amount,
                                 names.arg = row.names(final_aggr_data),
                                 horiz = FALSE,las=2, ylim = ylim,
                                 main = "Aggregated Spending on P-Card Per Month",
                                 col=c("light blue"), beside = TRUE )
-#                                legend = c("Total") 
 rm(op)
 dev.off()
+
+
+ggplot(data, aes(x=FIN.POSTING.DATE, y=FIN.TRANSACTION.AMOUNT)) +
+  geom_point(shape=1) +
+  geom_smooth(method=lm, se=TRUE, col="blue") +
+  labs(x="Date", y="Dollar Amount", title="Spending Patterns since September 2015, P-Card")
+ggsave("months_aggr/p_card_aggr_reg.png", width = 6, height = 4)
+
 
 # Final output tables in .csv ----
 write.csv(final_comparison_data, file = "months_aggr/month_comp_yoy.csv")

@@ -2,13 +2,12 @@ list.of.packages <- c("readr", "tictoc", "lubridate")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
-## Testing the time required by the code below--- install.packages("tictoc") if necessary
 library(tictoc)
 
 tic("everything runtime")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
@@ -18,9 +17,9 @@ data$ACC.LAST.NAME <- as.character(data$ACC.LAST.NAME)
 data$FIN.POSTING.DATE <- as.Date(data$FIN.POSTING.DATE, format = "%m/%d/%Y")
 data$FIN.TRANSACTION.DATE <- as.Date(data$FIN.TRANSACTION.DATE, format = "%m/%d/%Y")
 
-# test drive
+# Building YoY comparison dataset ----
 data_may_18 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2018-05-01') &
-                      data$FIN.POSTING.DATE <= as.Date('2018-05-31'))  ## SUCCESS!!
+                        data$FIN.POSTING.DATE <= as.Date('2018-05-31'))
 sum_by_people_18 <- c()
 ( lnames <- c(unique(data_may_18$ACC.LAST.NAME)) )
 for (i in 1:length(lnames)){
@@ -33,7 +32,7 @@ for (i in 1:length(lnames)){
 (sum_by_people_18)
 
 data_may_17 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2017-05-01') &
-                        data$FIN.POSTING.DATE <= as.Date('2017-05-31'))  ## SUCCESS!!
+                        data$FIN.POSTING.DATE <= as.Date('2017-05-31'))
 sum_by_people_17 <- c()
 ( lnames <- c(unique(data_may_17$ACC.LAST.NAME)) )
 
@@ -54,22 +53,18 @@ together_names <- c( c(data_may_18$ACC.LAST.NAME), c(data_may_17$ACC.LAST.NAME) 
 (unique_together_names <- unique(together_names))
 
 for (x in unique_together_names){
-  
   if (any(rownames(sum_by_people_18) == x)){
     lnames_sum_18 <- sum_by_people_18[x,]
   } else {
     lnames_sum_18 <- 0
   }
-  
   if (any(rownames(sum_by_people_17) == x)) {
     lnames_sum_17 <- sum_by_people_17[x,]
   } else {
     lnames_sum_17 <- 0
   }
-  
   together[x,] <- c(lnames_sum_18,lnames_sum_17)
 }
-
 (together)
 
 png("yoy_comp/YoY_comparisons.png", width = 800, height = 600, units = 'px', res=110)

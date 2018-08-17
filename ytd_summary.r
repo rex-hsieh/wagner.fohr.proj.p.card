@@ -5,7 +5,7 @@ if(length(new.packages)) install.packages(new.packages)
 tic("everything runtime")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
@@ -16,7 +16,7 @@ data$FIN.POSTING.DATE <- as.Date(data$FIN.POSTING.DATE, format = "%m/%d/%Y")
 data$FIN.TRANSACTION.DATE <- as.Date(data$FIN.TRANSACTION.DATE, format = "%m/%d/%Y")
 
 data_ytd_18 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2017-09-01') &
-                      data$FIN.POSTING.DATE <= as.Date('2018-06-30'))  ## SUCCESS!!
+                        data$FIN.POSTING.DATE <= as.Date('2018-06-30'))  ## SUCCESS!!
 sum_ytd_18 <- c()
 ( lnames <- c(unique(data_ytd_18$ACC.LAST.NAME)) )
 for (x in lnames){
@@ -25,7 +25,6 @@ for (x in lnames){
   sum_ytd_18[x] <- as.numeric(new_sum)
 }
 (sum_ytd_18 <- as.data.frame(sum_ytd_18))
-
 
 data_ytd_17 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2016-09-01') &
                         data$FIN.POSTING.DATE <= as.Date('2017-06-30'))  ## SUCCESS!!
@@ -44,21 +43,19 @@ together_names <- c( c(data_ytd_18$ACC.LAST.NAME), c(data_ytd_17$ACC.LAST.NAME) 
 (unique_together_names <- unique(together_names))
 
 for (x in unique_together_names){
-  
   if (any(rownames(sum_ytd_18) == x)){
     lnames_sum_18 <- sum_ytd_18[x,]
   } else {
     lnames_sum_18 <- 0
   }
-  
   if (any(rownames(sum_ytd_17) == x)) {
     lnames_sum_17 <- sum_ytd_17[x,]
   } else {
     lnames_sum_17 <- 0
   }
-  
   together[x,] <- c(lnames_sum_18,lnames_sum_17)
 }
+(together)
 
 png("ytd_comp/YTD_Comparisons.png", width = 800, height = 600, units = 'px', res=100)
 op <- par(mar=c(9,4,4,2)) 

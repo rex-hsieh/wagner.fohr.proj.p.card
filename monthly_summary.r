@@ -7,35 +7,32 @@ library(tictoc)
 tic("Everything")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 
 library(readr,lubridate)
 data <- read.csv("p_card_data.csv")
 data$FIN.TRANSACTION.AMOUNT <- parse_number(data$FIN.TRANSACTION.AMOUNT)
 data$ACC.LAST.NAME <- as.character(data$ACC.LAST.NAME)
 (tot_sum <- sum(data$FIN.TRANSACTION.AMOUNT, na.rm = TRUE))
-
 lnames <- unique(data$ACC.LAST.NAME)
 (lnames <- as.character(lnames))
 spending <- vector("list", length = length(lnames))
 
 # Total spending by unique last names (P-card data for now)--------
 net_sum = data.frame(cbind("ln" = lnames, "final" = spending))
-# (netsum <- net_sum[data$lnames == as.character(lnames[1])] )
 final_sum <- c()
-for (x in lnames){
-  new_data <- subset(data, data$ACC.LAST.NAME == x)
+for (i in 1:length(lnames)){
+  new_data <- data[which(data$ACC.LAST.NAME == lnames[i]),]
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  final_sum[x] <- new_sum
+  final_sum[lnames[i]] <- new_sum
 }
 (final_sum)
-
 (net_sum <- data.frame(sort(final_sum, decreasing = TRUE) ) )
 (colnames(net_sum) <- c("Total"))
-(net_sum$"% of Total" <- paste(round( (net_sum$Total / tot_sum) * 100, digits = 2), "%", sep ="") )
+(net_sum$"% of Total" <- paste(round((net_sum$Total / tot_sum)*100, digits = 2), "%", sep =""))
 
 png("acct_dept_expenses/last_names_net_sum_plot.png", width = 800, height = 600, units = 'px', res=110)
-op <- par(mar=c(6,4,3,2)) 
+op <- par(mar=c(9,4,2,2)) 
 ylim <- c(0, 1.3*max(net_sum$Total))
 net_sum_last_name_plot <- barplot(net_sum$Total,names.arg = row.names(net_sum),
                              horiz = FALSE,las=2,main = "P-Card Spending by Cardholder",
@@ -46,15 +43,14 @@ text(x = net_sum_last_name_plot, y = net_sum$Total,
      srt = 30, cex = 0.8, col = "blue")
 dev.off()
 
-
 # Total spending by unique account codes----
 data$FIN.ACCOUNTING.CODE.02.VALUE <- as.character(data$FIN.ACCOUNTING.CODE.02.VALUE)
 (acct_codes <- unique(na.omit(data$FIN.ACCOUNTING.CODE.02.VALUE)) )
 final_sum_acct_codes <- c()
-for (x in acct_codes){
-  new_data <- subset(data, data$FIN.ACCOUNTING.CODE.02.VALUE == x)
+for (i in 1:length(acct_codes)){
+  new_data <- data[data$FIN.ACCOUNTING.CODE.02.VALUE == acct_codes[i],]
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  final_sum_acct_codes[x] <- new_sum
+  final_sum_acct_codes[acct_codes[i]] <- new_sum
 }
 (net_sum_acct_codes <- data.frame(final_sum_acct_codes) )
 (net_sum_acct_codes <- data.frame(sort(final_sum_acct_codes, decreasing = TRUE) ) )
@@ -73,7 +69,7 @@ text(x = net_sum_acct_plot, y = net_sum_acct_codes$Total,
 dev.off()
 
 # Now, by counts of unique account codes----
-(net_counts_acct_codes <- table(data$FIN.ACCOUNTING.CODE.04.VALUE))
+(net_counts_acct_codes <- table(data$FIN.ACCOUNTING.CODE.02.VALUE))
 (net_counts_acct_codes <- as.data.frame(net_counts_acct_codes))
 (row.names(net_counts_acct_codes) <- net_counts_acct_codes$Var1)
 (net_counts_acct_codes <- subset(net_counts_acct_codes, select = Freq))
@@ -132,5 +128,11 @@ rm(op)
 text(x = dept_codes_plot, y = final_counts_dept_codes$Frequency,
      label = final_counts_dept_codes$Frequency, pos = 3, cex = 0.8, col = "blue")
 dev.off()
+
+ggplot(data, aes(x=as.Date(FIN.POSTING.DATE, format = "%m/%d/%Y"), y=FIN.TRANSACTION.AMOUNT, col=ACC.LAST.NAME, shape = ACC.LAST.NAME)) +
+  labs(x="Posting Date", y="Transaction Amount") +
+  scale_shape_manual(values=1:length(unique(data$ACC.LAST.NAME))) +
+  geom_point() 
+
 
 toc()

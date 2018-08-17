@@ -5,7 +5,7 @@ if(length(new.packages)) install.packages(new.packages)
 tic("everything runtime")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 # copy and paste the following command to the console: install.packages("readr")
 # setwd("~/Documents/Random R/p card")
 library(readr)
@@ -16,7 +16,7 @@ data$FIN.POSTING.DATE <- as.Date(data$FIN.POSTING.DATE, format = "%m/%d/%Y")
 data$FIN.TRANSACTION.DATE <- as.Date(data$FIN.TRANSACTION.DATE, format = "%m/%d/%Y")
 
 data_ytd_18 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2017-09-01') &
-                      data$FIN.POSTING.DATE <= as.Date('2018-06-30'))  ## SUCCESS!!
+                        data$FIN.POSTING.DATE <= as.Date('2018-06-30'))  ## SUCCESS!!
 sum_ytd_18 <- c()
 ( lnames <- c(unique(data_ytd_18$ACC.LAST.NAME)) )
 for (x in lnames){
@@ -25,7 +25,6 @@ for (x in lnames){
   sum_ytd_18[x] <- as.numeric(new_sum)
 }
 (sum_ytd_18 <- as.data.frame(sum_ytd_18))
-
 
 data_ytd_17 <- subset(data, data$FIN.POSTING.DATE >= as.Date('2016-09-01') &
                         data$FIN.POSTING.DATE <= as.Date('2017-06-30'))  ## SUCCESS!!
@@ -64,7 +63,7 @@ png("ytd_comp/YTD_cta_Comparisons.png", width = 800, height = 600, units = 'px',
 op <- par(mar=c(9,4,4,2)) 
 ylim <- c(0, 1.3*max( max(together$FY18),max(together$FY17) ))
 yoy_comparisons_plot <- barplot(t(together),names.arg = row.names(together),
-                                horiz = FALSE,las=2, ylim = ylim, main = "YTD Comparisons for cTA (Up to July), FY17 vs FY18",
+                                horiz = FALSE,las=2, ylim = ylim, main = "YTD Comparisons for CTA (Up to July), FY17 vs FY18",
                                 col=c("light blue","yellow"), beside = TRUE, legend = colnames(together))
 rm(op)
 #text(x = yoy_comparisons_plot, y = rbind((together$FY18), (together$FY17)), 

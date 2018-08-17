@@ -7,7 +7,7 @@ library(tictoc)
 tic("Everything")
 
 rm(list=ls())
-setwd("C:/Users/mhh357/Desktop/P card reporting project")
+setwd("~/P card reporting project")
 
 library(readr)
 data <- read.csv("cta_card_data.csv")
@@ -21,12 +21,11 @@ spending <- vector("list", length = length(lnames))
 
 # Total spending by unique last names (P-card data for now)--------
 net_sum = data.frame(cbind("ln" = lnames, "final" = spending))
-# (netsum <- net_sum[data$lnames == as.character(lnames[1])] )
 final_sum <- c()
-for (x in lnames){
-  new_data <- subset(data, data$ACC.LAST.NAME == x)
+for (i in 1:length(lnames)){
+  new_data <- data[which(data$ACC.LAST.NAME == lnames[i]),]
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  final_sum[x] <- new_sum
+  final_sum[lnames[i]] <- new_sum
 }
 
 (net_sum <- data.frame(sort(final_sum, decreasing = TRUE) ) )
@@ -51,10 +50,10 @@ dev.off()
 data$FIN.ACCOUNTING.CODE.02.VALUE <- as.character(data$FIN.ACCOUNTING.CODE.02.VALUE)
 (acct_codes <- unique(na.omit(data$FIN.ACCOUNTING.CODE.02.VALUE)) )
 final_sum_acct_codes <- c()
-for (x in acct_codes){
-  new_data <- subset(data, data$FIN.ACCOUNTING.CODE.02.VALUE == x)
+for (i in 1:length(acct_codes)){
+  new_data <- data[data$FIN.ACCOUNTING.CODE.02.VALUE == acct_codes[i],]
   new_sum <- sum(new_data$FIN.TRANSACTION.AMOUNT)
-  final_sum_acct_codes[x] <- new_sum
+  final_sum_acct_codes[acct_codes[i]] <- new_sum
 }
 (net_sum_acct_codes <- data.frame(final_sum_acct_codes) )
 (net_sum_acct_codes <- data.frame(sort(final_sum_acct_codes, decreasing = TRUE) ) )
